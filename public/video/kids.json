@@ -1,0 +1,16 @@
+[
+  {
+    "text": "[music",
+    "startMs": 60,
+    "endMs": 7490,
+    "timestampMs": 1080,
+    "confidence": 0.235048
+  },
+  {
+    "text": " plays]",
+    "startMs": 7490,
+    "endMs": 15000,
+    "timestampMs": 14340,
+    "confidence": 0.606766
+  }
+]
