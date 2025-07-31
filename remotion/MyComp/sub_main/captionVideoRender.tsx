@@ -7,6 +7,7 @@ interface videoRendererProps {
 }
 
 const CaptionVideoRenderer: React.FC<videoRendererProps> = ({ clip }) => {
+  const viveoTrimEnd = Math.max(clip.properties.TrimEnd, clip.properties.duration);
   const parentdiv: React.CSSProperties = {
     position: "absolute",
     top: `${clip.properties.top}px`,
@@ -28,7 +29,7 @@ const CaptionVideoRenderer: React.FC<videoRendererProps> = ({ clip }) => {
         // playbackRate={clip.properties.volume}
         src={clip.properties.src}
         startFrom={clip.properties.TrimStart}
-        endAt={clip.properties.TrimEnd}
+        endAt={viveoTrimEnd}
         style={{
           width: `${clip.properties.width}px`,
           height: `${clip.properties.height}px`,

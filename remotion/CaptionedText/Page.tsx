@@ -13,15 +13,15 @@ import { TikTokPage } from "@remotion/captions";
 const fontFamily = TheBoldFont;
 
 const container: React.CSSProperties = {
-  justifyContent: "center",
-  alignItems: "center",
-  top: undefined,
-  bottom: 350,
-  height: 150,
+  // justifyContent: "center",
+  // alignItems: "center",
+  // top: undefined,
+  // bottom: 350,
+  // height: 150,
 };
 
-const DESIRED_FONT_SIZE = 120;
-const HIGHLIGHT_COLOR = "#39E508";
+const DESIRED_FONT_SIZE = 50;
+const HIGHLIGHT_COLOR = "#ff007f"; 
 
 export const Page: React.FC<{
   enterProgress: number;
