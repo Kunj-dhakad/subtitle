@@ -26,7 +26,7 @@ const VideoGrid: React.FC = () => {
 
   const newId = `caption-${Date.now()}`;
 
-  const createClips = (url: string, caption_url: string) => {
+  const createClips = (url: string,) => {
     Allclips.forEach((clip) => {
       dispatch(
         updateClip({
@@ -67,7 +67,7 @@ const VideoGrid: React.FC = () => {
 
 
 
-  const createcaptiontextClips = (url: string, caption_url: Caption[]) => {
+  const createcaptiontextClips = (caption_url: Caption[]) => {
     Allclips.forEach((clip) => {
       dispatch(
         updateClip({
@@ -84,7 +84,7 @@ const VideoGrid: React.FC = () => {
       id: newId,
       type: "captionText",
       properties: {
-        src: url,
+        src: '',
         caption_url,
         start: 0,
         duration: 120,
@@ -97,7 +97,7 @@ const VideoGrid: React.FC = () => {
         zindex: 1,
         TrimStart: 1,
         TrimEnd: 120,
-        videothumbnail: url,
+        videothumbnail: '',
         isDragging: false,
       },
     };
@@ -106,7 +106,7 @@ const VideoGrid: React.FC = () => {
   };
 
 
-  const get_caption_text = async (url: string, text_url: string) => {
+  const get_caption_text = async (text_url: string) => {
     try {
       const response = await fetch(text_url);
       const rawData: Caption[] = await response.json();
@@ -116,7 +116,7 @@ const VideoGrid: React.FC = () => {
         timestampMs: caption.timestampMs ?? 0,
       }));
 
-      createcaptiontextClips(url, sanitizedCaptions);
+      createcaptiontextClips(sanitizedCaptions);
     } catch (error) {
       console.error("Error fetching or processing captions:", error);
     }
@@ -133,7 +133,16 @@ const VideoGrid: React.FC = () => {
       });
 
       const data = await response.json();
-      console.log("Generated subtitle:", data);
+      const rawData: Caption[] = data.caption;
+
+      console.log("Generated subtitle:", rawData);
+
+      const sanitizedCaptions = rawData.map((caption) => ({
+        ...caption,
+        timestampMs: caption.timestampMs ?? 0,
+      }));
+      createcaptiontextClips(sanitizedCaptions);
+      createClips("https://kdmeditor.s3.us-east-1.amazonaws.com/uploads/cat.mp4")
     } catch (error) {
       console.error("Error generating subtitle:", error);
     }
@@ -153,8 +162,8 @@ const VideoGrid: React.FC = () => {
             height={300}
             alt=""
             onClick={() => {
-              createClips("https://remotionlambda-useast1-qe2jk3zrmz.s3.us-east-1.amazonaws.com/kd_videoeditor/files/caption/1737368798492.mp4", "https://remotionlambda-useast1-qe2jk3zrmz.s3.us-east-1.amazonaws.com/kd_videoeditor/files/caption/1737368798492.json");
-              get_caption_text("https://remotionlambda-useast1-qe2jk3zrmz.s3.us-east-1.amazonaws.com/kd_videoeditor/files/caption/1737368798492.mp4", "https://remotionlambda-useast1-qe2jk3zrmz.s3.us-east-1.amazonaws.com/kd_videoeditor/files/caption/1737368798492.json");
+              createClips("https://remotionlambda-useast1-qe2jk3zrmz.s3.us-east-1.amazonaws.com/kd_videoeditor/files/caption/1737368798492.mp4");
+              get_caption_text("https://remotionlambda-useast1-qe2jk3zrmz.s3.us-east-1.amazonaws.com/kd_videoeditor/files/caption/1737368798492.json");
             }}
             className="w-full h-auto cursor-pointer"
           />
