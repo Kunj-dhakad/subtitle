@@ -123,7 +123,13 @@ export async function POST(req: NextRequest) {
       timestamp_granularities: ['word'],
     });
 
-    const { captions } = openAiWhisperApiToCaptions({ transcription });
+    const transcriptionWithMeta = {
+      ...transcription,
+      duration:  0, 
+      language:'en',
+    };
+
+    const { captions } = openAiWhisperApiToCaptions({ transcription: transcriptionWithMeta });
 
     rmSync(tempDir, { recursive: true, force: true });
 
