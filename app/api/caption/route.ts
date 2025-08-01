@@ -159,14 +159,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import {
-   writeFileSync,
-    rmSync, mkdirSync, existsSync } from "fs";
+  writeFileSync,
+  rmSync, mkdirSync, existsSync
+} from "fs";
 // import { execSync } from "child_process";
 // import fetch from "node-fetch";
 import fs from "fs";
 import OpenAI from "openai";
 import { openAiWhisperApiToCaptions } from '@remotion/openai-whisper';
-import { v4 as uuidv4 } from 'uuid'; 
+import { v4 as uuidv4 } from 'uuid';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -187,16 +188,16 @@ export async function POST(req: NextRequest) {
       mkdirSync(tempDir, { recursive: true });
     }
 
-    const uniqueName = uuidv4(); 
+    const uniqueName = uuidv4();
     const videoPath = path.join(tempDir, `${uniqueName}.mp4`);
     // const audioPath = path.join(tempDir, `${uniqueName}.mp3`);
 
-    
+
     const res = await fetch(videoUrl);
     const buffer = Buffer.from(await res.arrayBuffer());
     writeFileSync(videoPath, new Uint8Array(buffer));
 
-   
+
     // execSync(`npx remotion ffmpeg -i ${videoPath} -ar 16000 ${audioPath} -y`, {
     //   stdio: ["ignore", "inherit"],
     // });
