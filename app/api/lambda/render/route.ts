@@ -12,7 +12,7 @@ export const POST = executeApi<RenderMediaOnLambdaOutput, typeof RenderRequest>(
   RenderRequest,
   async (req, body) => {
 
-    console.log("AWS_ACCESS_KEY_ID:", process.env.AWS_ACCESS_KEY_ID);
+    console.log("REMOTION_AWS_SECRET_ACCESS_KEY:", process.env.REMOTION_AWS_SECRET_ACCESS_KEY);
     console.log("REMOTION_AWS_ACCESS_KEY_ID:", process.env.REMOTION_AWS_ACCESS_KEY_ID);
 
     if (
