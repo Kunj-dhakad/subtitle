@@ -156,23 +156,17 @@
 
 
 
-
-
-
-
-
-
-
-
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
-import { writeFileSync, rmSync, mkdirSync, existsSync } from "fs";
-import { execSync } from "child_process";
-import fetch from "node-fetch";
+import {
+   writeFileSync,
+    rmSync, mkdirSync, existsSync } from "fs";
+// import { execSync } from "child_process";
+// import fetch from "node-fetch";
 import fs from "fs";
 import OpenAI from "openai";
 import { openAiWhisperApiToCaptions } from '@remotion/openai-whisper';
-import { v4 as uuidv4 } from 'uuid'; // Replaced randomUUID
+import { v4 as uuidv4 } from 'uuid'; 
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -187,30 +181,29 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "videoUrl is required" }, { status: 400 });
     }
 
-    // ✅ Use /tmp directory for AWS Amplify
     const tempDir = "/tmp";
 
     if (!existsSync(tempDir)) {
       mkdirSync(tempDir, { recursive: true });
     }
 
-    const uniqueName = uuidv4(); // replaced randomUUID
+    const uniqueName = uuidv4(); 
     const videoPath = path.join(tempDir, `${uniqueName}.mp4`);
-    const audioPath = path.join(tempDir, `${uniqueName}.mp3`);
+    // const audioPath = path.join(tempDir, `${uniqueName}.mp3`);
 
-    // ✅ Download the video
+    
     const res = await fetch(videoUrl);
     const buffer = Buffer.from(await res.arrayBuffer());
     writeFileSync(videoPath, new Uint8Array(buffer));
 
-    // ✅ Convert to audio using FFmpeg
-    execSync(`npx remotion ffmpeg -i ${videoPath} -ar 16000 ${audioPath} -y`, {
-      stdio: ["ignore", "inherit"],
-    });
+   
+    // execSync(`npx remotion ffmpeg -i ${videoPath} -ar 16000 ${audioPath} -y`, {
+    //   stdio: ["ignore", "inherit"],
+    // });
 
-    // ✅ Transcribe using OpenAI
+
     const transcription = await openai.audio.transcriptions.create({
-      file: fs.createReadStream(audioPath),
+      file: fs.createReadStream(videoPath),
       model: 'whisper-1',
       response_format: 'verbose_json',
       timestamp_granularities: ['word'],
@@ -224,9 +217,9 @@ export async function POST(req: NextRequest) {
 
     const { captions } = openAiWhisperApiToCaptions({ transcription: transcriptionWithMeta });
 
-    // ✅ Clean up
+
     rmSync(videoPath, { force: true });
-    rmSync(audioPath, { force: true });
+    // rmSync(audioPath, { force: true });
 
     return NextResponse.json({ caption: captions });
 
